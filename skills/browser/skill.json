@@ -1,0 +1,5 @@
+{
+    "name": "browser",
+    "description": "Open and read webpages",
+    "entry": "browse.py"
+}
