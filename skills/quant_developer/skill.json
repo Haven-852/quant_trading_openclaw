@@ -1,0 +1,5 @@
+{
+    "name": "quant_developer",
+    "description": "基于 Backtrader 的自主量化策略开发员工。能理解需求、阅读代码、修改策略、运行测试和回测、自我迭代优化并输出报告。",
+    "entry": "developer.py"
+}
