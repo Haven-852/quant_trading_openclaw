@@ -1,0 +1,82 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/qwen3:8b"
+      }
+    },
+    "list": [
+      {
+        "id": "seth",
+        "name": "Seth",
+        "identity": {
+          "name": "Seth",
+          "emoji": "🎯",
+          "theme": "hub"
+        },
+        "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/hub",
+        "model": {
+          "primary": "ollama/qwen3:8b"
+        },
+        "subagents": {
+          "allowAgents": ["quant-research", "quant-engineering", "quant-qa"],
+          "denyAgents": []
+        }
+      },
+      {
+        "id": "quant-research",
+        "name": "Research Agent",
+        "identity": {
+          "name": "情报总监",
+          "emoji": "🔭",
+          "theme": "research"
+        },
+        "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/research",
+        "model": {
+          "primary": "ollama/qwen3:8b"
+        },
+        "tools": {
+          "profile": "coding"
+        }
+      },
+      {
+        "id": "quant-engineering",
+        "name": "Engineering Agent",
+        "identity": {
+          "name": "工程组",
+          "emoji": "🛠️",
+          "theme": "engineering"
+        },
+        "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/engineering",
+        "model": {
+          "primary": "ollama/qwen3:8b"
+        },
+        "tools": {
+          "profile": "coding"
+        }
+      },
+      {
+        "id": "quant-qa",
+        "name": "QA Agent",
+        "identity": {
+          "name": "测试组",
+          "emoji": "✅",
+          "theme": "qa"
+        },
+        "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/qa",
+        "model": {
+          "primary": "ollama/qwen3:8b"
+        },
+        "tools": {
+          "profile": "coding"
+        }
+      }
+    ]
+  },
+  "tools": {
+    "agentToAgent": {
+      "enabled": true,
+      "allow": ["seth"]
+    }
+  }
+}

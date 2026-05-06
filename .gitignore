@@ -2,3 +2,4 @@ memory/
 .learnings/
 .openclaw/
 log/
+deploy/quant-hub-spoke/.env
