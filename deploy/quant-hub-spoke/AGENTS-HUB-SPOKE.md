@@ -5,7 +5,7 @@
 ## 总原则
 
 - **唯一入口**：人类与外部频道（微信、Cove 等）只与 **Hub Agent（Seth，`agentId`: `seth`）** 对话。所有任务拆解、优先级、验收标准由 Seth 定义并下发。
-- **自上而下**：子智能体（`quant-research`、`quant-engineering`、`quant-qa`）**不**直接接受人类新需求；只处理 Seth 写入各沙盒工作区的任务包（见各 `workspaces/*/TASK_IN.md`）。
+- **自上而下**：子智能体（`quant-research`、`quant-engineering`、`quant-qa`、`quant-doc-writer`）**不**直接接受人类新需求；只处理 Seth 写入各沙盒工作区的任务包（见各 `workspaces/*/TASK_IN.md`）。
 - **沙盒执行**：策略回测、安装依赖、任意 shell 等**默认在对应 Docker 容器内**执行（见 `exec-spoke.ps1` / README）；宿主机 OpenClaw 主要负责读写工作区与编排。
 
 ## 角色
@@ -13,9 +13,10 @@
 | Agent ID | 角色 | 职责 |
 |----------|------|------|
 | `seth` | Hub | 拆解量化需求、分配子任务、合并结果、对外汇报。 |
-| `quant-research` | 情报总监 / 研究员 | 调研数据源、论文与竞品方案；输出研究结论到 `workspaces/research/`。 |
-| `quant-engineering` | 工程组 | 配置、策略代码、前后端接口与脚本实现；写入 `workspaces/engineering/`。 |
-| `quant-qa` | 测试组 | pytest、回测命令、冒烟清单；证据与日志写入 `workspaces/qa/`。 |
+| `quant-research` | 情报总监 / 研究员 | Google Scholar、书籍与网络交叉检索；聚焦 **A 股量化有效知识**；整理为 **`REQUIREMENTS_FOR_ENGINEERING.md`** 等可执行需求交给 Engineering；细则见 `workspaces/research/README.md`。 |
+| `quant-engineering` | 工程组 | **仅**在 `E:\demo\backtrader` 内改业务代码；先读后改、前后端同步、每功能在 `E:\demo\backtrader\tests` 做前后端连通测试；细则见 `workspaces/engineering/README.md`。 |
+| `quant-qa` | 测试组 | **在程序已能执行回测时**为主：按 **正确策略模型** 跑回测与回归，pytest/连通性为辅；证据写入 `workspaces/qa/`；细则见 `workspaces/qa/README.md`。 |
+| `quant-doc-writer` | 文档撰写员 | 完整功能说明与（必要时）失败复现文档，输出至 **`E:\demo\backtrader\doc\function`**；见 `workspaces/doc-writer/README.md`。 |
 
 ## Seth 下发任务的最小约定
 

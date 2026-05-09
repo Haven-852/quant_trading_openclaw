@@ -16,11 +16,13 @@
         },
         "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/hub",
         "model": {
-          "primary": "ollama/qwen3:8b"
+          "primary": "deepseek-api/deepseek-v4-pro"
         },
         "subagents": {
-          "allowAgents": ["quant-research", "quant-engineering", "quant-qa"],
-          "denyAgents": []
+          "allowAgents": ["quant-research", "quant-engineering", "quant-qa", "quant-doc-writer"]
+        },
+        "tools": {
+          "profile": "coding"
         }
       },
       {
@@ -33,7 +35,7 @@
         },
         "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/research",
         "model": {
-          "primary": "ollama/qwen3:8b"
+          "primary": "deepseek-api/deepseek-v4-flash"
         },
         "tools": {
           "profile": "coding"
@@ -49,7 +51,7 @@
         },
         "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/engineering",
         "model": {
-          "primary": "ollama/qwen3:8b"
+          "primary": "deepseek-api/deepseek-v4-pro"
         },
         "tools": {
           "profile": "coding"
@@ -66,6 +68,22 @@
         "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/qa",
         "model": {
           "primary": "ollama/qwen3:8b"
+        },
+        "tools": {
+          "profile": "coding"
+        }
+      },
+      {
+        "id": "quant-doc-writer",
+        "name": "Documentation Agent",
+        "identity": {
+          "name": "文档撰写员",
+          "emoji": "📝",
+          "theme": "documentation"
+        },
+        "workspace": "REPLACE_WITH_ABSOLUTE_PATH/deploy/quant-hub-spoke/workspaces/doc-writer",
+        "model": {
+          "primary": "deepseek-api/deepseek-v4-flash"
         },
         "tools": {
           "profile": "coding"

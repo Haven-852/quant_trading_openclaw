@@ -1,13 +1,14 @@
 # 量化交易 Hub-and-Spoke（中心辐射）部署说明
 
-本目录提供 **Seth（Hub）+ 三个 Docker 沙盒（研究员 / 工程 / 测试）** 的目录布局、Compose 与 OpenClaw 配置片段，用于 **Backtrader / 量化策略** 的多智能体协同：中心拆解任务，子智能体在隔离环境中执行。
+本目录提供 **Seth（Hub）+ 三个 Docker 沙盒（研究员 / 工程 / 测试）+ 文档撰写员工作区** 的目录布局、Compose 与 OpenClaw 配置片段，用于 **Backtrader / 量化策略** 的多智能体协同：中心拆解任务，子智能体在隔离环境中执行（文档员默认写宿主机 `E:\demo\backtrader\doc\function`，无单独容器）。
 
 ## 架构
 
 ```
-人类 / 频道 ──► Seth (seth) ──┬──► quant-research  (工作区 + 容器 quant-research)
-                              ├──► quant-engineering
-                              └──► quant-qa
+人类 / 频道 ──► Seth (seth) ──┬──► quant-research     (工作区 + 容器 quant-research)
+                              ├──► quant-engineering (工作区 + 容器 quant-engineering)
+                              ├──► quant-qa          (工作区 + 容器 quant-qa)
+                              └──► quant-doc-writer  (工作区 workspaces/doc-writer；产出 doc\function)
 ```
 
 - **OpenClaw**：在 `~/.openclaw/openclaw.json` 中注册多个 `agents.list` 条目；各 agent 的 `workspace` 指向本仓库下 `workspaces/<角色>`（与 Docker 卷挂载目录一致）。
@@ -24,6 +25,11 @@ copy .env.example .env
 ```
 
 将 `.env` 中的 **`MODEL_HUB_SETH_PRIMARY`、`MODEL_RESEARCH_PRIMARY`、…** 手工同步到 `openclaw.json` 里对应 agent 的 `model.primary`（OpenClaw 当前不会自动读取本目录 `.env`）。
+
+**推荐分工（与当前默认 `.env.example` 一致）**：Hub / Engineering 用 **`deepseek-api/deepseek-v4-pro`**（拆解与实现）；Research / Doc-writer 用 **`deepseek-api/deepseek-v4-flash`**（检索与成文）；QA 用 **`ollama/qwen3:8b`**（本地快速跑测，需本机 Ollama 已拉取该模型）。
+
+冒烟：`openclaw config validate` 后对每个 agent 执行  
+`openclaw agent --agent <id> --message "一行：agent id、provider、model id。" --timeout 300 --json`，检查 `result.meta.agentMeta` 是否与预期一致。
 
 ### 2. 启动沙盒
 
@@ -65,16 +71,17 @@ cd E:\openclaw\haven-852\deploy\quant-hub-spoke
 | `AGENTS-HUB-SPOKE.md` | Hub 治理与工作流，可并入工作区 `AGENTS.md` |
 | `workspaces/hub` | Seth 工作区（任务板、汇总） |
 | `workspaces/research` | 调研产出 |
-| `workspaces/engineering` | 代码与配置 |
+| `workspaces/engineering` | 工程任务与规范（**业务代码仅** `E:\demo\backtrader`） |
 | `workspaces/qa` | 测试与回测日志 |
+| `workspaces/doc-writer` | 文档撰写员任务说明；产出写入 **`E:\demo\backtrader\doc\function`** |
 
 ## 与 Backtrader 目录的关系
 
-策略与回测代码可放在 `E:\demo\backtrader\`（见根目录 `AGENTS.md`）；Hub 可在任务书中要求 **工程沙盒通过挂载只读或同步脚本** 访问该路径——默认 compose 未挂载 `E:\demo\backtrader`，需要时可在 `docker-compose.yml` 中为 `quant-engineering` / `quant-qa` 增加只读 `volumes` 条目。
+策略与回测代码可放在 `E:\demo\backtrader\`（见根目录 `AGENTS.md`）；工程组**仅**在该路径改代码；功能说明与事故记录由文档撰写员写入 **`E:\demo\backtrader\doc\function`**。Hub 可在任务书中要求 **工程/QA 沙盒通过挂载** 访问该路径——默认 compose 未挂载 `E:\demo\backtrader`，需要时可在 `docker-compose.yml` 中为 `quant-engineering` / `quant-qa` 增加只读或读写 `volumes` 条目。
 
 ## 校验清单
 
-- [ ] `docker compose ps` 三个服务均为 `running`
-- [ ] `openclaw.json` 中四个 `id` 唯一且 `workspace` 路径存在
+- [ ] `docker compose ps` 三个容器服务均为 `running`
+- [ ] `openclaw.json` 中 Hub 与各子 agent（含 `quant-doc-writer`）`id` 唯一且 `workspace` 路径存在
 - [ ] 频道 `bindings` 仅指向 `seth`（按你的安全策略）
 - [ ] `model.primary` 与 `.env` 中 `MODEL_*` 一致

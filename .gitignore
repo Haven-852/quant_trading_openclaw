@@ -3,3 +3,6 @@ memory/
 .openclaw/
 log/
 deploy/quant-hub-spoke/.env
+# 各角色 workspace 若误执行 git init，嵌套 .git 会导致父仓库 git add 报错
+deploy/quant-hub-spoke/workspaces/**/.git
+deploy/quant-hub-spoke/workspaces/**/.git/
